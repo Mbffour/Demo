@@ -132,7 +132,6 @@ public class MyThreadPoolExecutor extends MyAbstractExecutorService {
     private static final RejectedExecutionHandler defaultHandler = new ThreadPoolExecutor.AbortPolicy();
 
 
-    //
     private static final RuntimePermission shutdownPerm =
             new RuntimePermission("modifyThread");
 

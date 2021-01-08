@@ -35,8 +35,9 @@ public class BB extends  AA {
     }
 
     @Override
-    public void kaka(String sss) {
+    public int kaka(String sss) {
         System.out.println("bbbbbbnb");
+        return 99;
     }
 
     //    public int sayHi(String s){
