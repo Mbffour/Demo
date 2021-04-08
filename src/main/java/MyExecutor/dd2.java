@@ -19,27 +19,10 @@ public class dd2 {
             });
             thread.start();
 
-            Thread thread2 = new Thread(() -> {
-                try {
-                    Thread.sleep(7000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println(111);
-            });
-            thread2.start();
-
-
-            thread.join();
-            thread2.join();
-
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("end");
-        System.out.println("end");
-        System.out.println("end");
 
     }
 }
