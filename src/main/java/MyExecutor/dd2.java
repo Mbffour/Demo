@@ -34,11 +34,24 @@ public class dd2 {
             thread2.join();
 
 
+            System.out.println("end");
+            System.out.println("end");
+            System.out.println("end");
+
+            System.out.println("end");
+            System.out.println("end");
+            System.out.println("end");
+
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("end");
-        System.out.println("end");
+
+
+
+
+
+
         System.out.println("end");
 
     }
