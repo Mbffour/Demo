@@ -14,6 +14,7 @@ public class AA {
     static int i = 1;
 
     public static int a = 10;
+    public static int aaaa= 10;
 
     public int  kaka(String sss){
         System.out.println("ssss");
