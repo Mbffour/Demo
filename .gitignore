@@ -1,0 +1,13 @@
+.idea/
+*.iml
+logs/
+
+
+### maven ###
+target/
+*.war
+*.ear
+*.zip
+*.tar
+*.tar.gz
+zhucan-boot/src/main/resources/application.yml
