@@ -77,7 +77,7 @@ public class LinkNodeDemo {
             return;
         }
 
-        //next 新节点
+        //doNext 新节点
         tail.next = new TNode(null,tail,o);
         tail = tail.next;
         size ++;

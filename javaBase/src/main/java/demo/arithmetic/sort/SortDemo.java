@@ -1,6 +1,12 @@
 package demo.arithmetic.sort;
 
+import cn.hutool.core.collection.ListUtil;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author ：mbf
@@ -72,19 +78,16 @@ public class SortDemo {
      * @param arrays
      */
     public static void insertSort(int[] arrays) {
-        for (int i = 1; i < arrays.length; i++) {
-            //外层循环确定每一个排好的数
-            //这个数跟前面的有序数组比 找到属于自己的位置
+        // {5, 76, 2, 6, 73, 21, 772, 6, 214, 782, 643, 3, 86};
+        for(int i = 1;i<arrays.length;i++){
             int target = arrays[i];
-
-            for (int j = i - 1; j >= 0; j--) {
-                if (target < arrays[j]) {
-                    int temp = arrays[j];
-                    arrays[j] = target;
-                    arrays[j + 1] = temp;
+            for(int j = i-1;j>=0;j--){
+                if(target<arrays[j]){
+                    exchange(arrays,j,j+1);
                 }
             }
         }
+
     }
 
     /**
@@ -100,25 +103,28 @@ public class SortDemo {
      * @param arr
      */
     public static void ShellSort(int[] arr) {
-        //gap 等于数组的增量  平常的数组 gap =1
         int gap = arr.length/2;
+
         while (gap>0){
 
-            //每一次增量进行拆分数组  进行插入排序
-            for (int i=gap;i<arr.length;i++){
-                int current = arr[i];
-                // >=0 下标可以取到0
-                for(int j = i-gap;j>=0;j=j-gap){
-                    if(current<arr[j]){
-                        int temp = arr[j];
-                        arr[j] =  arr[j+gap];
-                        arr[j+gap] = temp;
+            for(int i=gap;i<arr.length;i++){
+                //插入排序 增量为gap
+                int target = arr[i];
+                for(int j=i-gap;j>=0;j = j-gap){
+                    if(target<arr[j]){
+                        exchange(arr,j,j+gap);
                     }
                 }
             }
             gap = gap/2;
         }
+    }
 
+
+    public static void exchange(int[] array,int a,int b){
+        int temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
     }
 
 
@@ -140,13 +146,14 @@ public class SortDemo {
      * @param array
      */
     public static int[] mergeSort(int[] array){
-        //出口
-        if(array.length <= 1){
+
+        if(array.length <=1){
             return array;
         }
-        int mindIndex = array.length/2;
-        int[] left = Arrays.copyOfRange(array,0,mindIndex);
-        int[] right = Arrays.copyOfRange(array,mindIndex,array.length);
+        int mid = array.length/2;
+        int[] left = Arrays.copyOfRange(array, 0, mid);
+        int[] right = Arrays.copyOfRange(array,mid,array.length);
+
         return merge(mergeSort(left),mergeSort(right));
     }
 
@@ -157,36 +164,34 @@ public class SortDemo {
      * @return
      */
     private static int[] merge(int[] left, int[] right) {
-
         int[] result = new int[left.length+right.length];
-        int leftIndex =0;
-        int rightIndex = 0;
-        int resultIndex = 0;
 
-        //比较两个数组选出最小的写入result
+        int leftIndex=0,rightIndex = 0,resultIndex =0;
         while (leftIndex<left.length && rightIndex<right.length){
+
             if(left[leftIndex]<right[rightIndex]){
                 result[resultIndex] = left[leftIndex];
                 leftIndex++;
             }else{
-                result[resultIndex] = right[rightIndex];
+                result[resultIndex]=right[rightIndex];
                 rightIndex++;
             }
-            resultIndex ++;
+            resultIndex++;
         }
 
-        //多余的left 和 right
-        if(leftIndex < left.length){
+        //多余的左右数组
+
+        if(leftIndex<left.length){
             while (leftIndex<left.length){
                 result[resultIndex] = left[leftIndex];
+                resultIndex++;
                 leftIndex++;
-                resultIndex ++;
             }
-        }else {
+        }else{
             while (rightIndex<right.length){
                 result[resultIndex] = right[rightIndex];
+                resultIndex++;
                 rightIndex++;
-                resultIndex ++;
             }
         }
 
@@ -212,47 +217,108 @@ public class SortDemo {
      * 递归地把小于基准值元素的子序列和大于基准值元素的子序列进行快速排序。
      * @param array
      */
-    public static int[] quickSort(int[] array){
-        if(array.length <=1){
-            return array;
+    public static void quickSort(int[] array,int left,int right){
+        if(right-left<=1){
+            return;
         }
 
-        //轴心元素
-        int target = array[array.length-1];
-        int maxIndex = 0;
-        //分两个数组
-        for(int i = 1;i<array.length;i++){
+        int target = array[left];
 
-            if(target>=array[i]){
-                //小的话 交换
-                int temp = array[i];
-                array[i] = array[maxIndex];
-                array[maxIndex] = temp;
-                maxIndex++;
+        int low = left;
+        int high = right;
+
+        //    2 2 4 5 9 6 8
+        while (right>left){
+
+            while (array[right]>=target && right>left){
+                right--;
             }
 
-            System.out.println(Arrays.toString(array));
+            while (array[left]<=target && right>left){
+                left++;
+            }
+
+            if(left==right){
+                array[low] = array[left];
+                array[left] = target;
+            }else {
+                exchange(array,left,right);
+            }
         }
 
-        //最大
-        int temp = array[maxIndex];
-        array[maxIndex] = target;
-        array[array.length-1] =  temp;
-
-        return null;
-
+        quickSort(array,low,left-1);
+        quickSort(array,left+1,high);
     }
+
+
+    private static int[] getMinAndMax(List<Integer> arr) {
+        int maxValue = arr.get(0);
+        int minValue = arr.get(0);
+        for (int i : arr) {
+            if (i > maxValue) {
+                maxValue = i;
+            } else if (i < minValue) {
+                minValue = i;
+            }
+        }
+        return new int[] { minValue, maxValue };
+    }
+
+    /**
+     * 桶排序
+     * @param arr
+     * @return
+     */
+    public static List<Integer> bucketSort(List<Integer> arr, int bucket_size) {
+        if (arr.size() < 2 || bucket_size == 0) {
+            return arr;
+        }
+        int[] extremum = getMinAndMax(arr);
+        int minValue = extremum[0];
+        int maxValue = extremum[1];
+        int bucket_cnt = (maxValue - minValue) / bucket_size + 1;
+        List<List<Integer>> buckets = new ArrayList<>();
+        for (int i = 0; i < bucket_cnt; i++) {
+            buckets.add(new ArrayList<Integer>());
+        }
+        for (int element : arr) {
+            int idx = (element - minValue) / bucket_size;
+            buckets.get(idx).add(element);
+        }
+        for (int i = 0; i < buckets.size(); i++) {
+            if (buckets.get(i).size() > 1) {
+                //排序
+                buckets.set(i, bucketSort(buckets.get(i), bucket_size / 2));
+            }
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (List<Integer> bucket : buckets) {
+            for (int element : bucket) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
+
+
+
 
     public static void main(String[] args) {
 
+        int[] array = {72,5, 76, 2, 6, 73, 21, 772, 6, 214, 782, 643, 3, 86};
 
-        int[] array = {5, 76, 2, 6, 73, 21, 772, 6, 214, 782, 643, 3, 86};
-        quickSort(array);
-        //array = mergeSort(array);
-       // ShellSort(array);
-       // insertSort(array);
+        List<Integer> list = bucketSort(Arrays.stream(array).boxed().collect(Collectors.toList()), 5);
+        System.out.println(list);
+        // int[] array = {4, 21, 6, 3,7,9};   3 21 6 4 7 9
+//        quickSort(array,0,array.length-1);
+//        quickDemo(array,0,array.length-1);
+ //       array = mergeSort(array);
+          //ShellSort(array);
+//          insertSort(array);
 //        selectionSort(array);
 //        bubbleSort(array);
-        System.out.println(Arrays.toString(array));
+       // System.out.println(Arrays.toString(array));
     }
+
+
 }

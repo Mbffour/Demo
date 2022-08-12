@@ -11,6 +11,7 @@ public class demo {
         Thread finalThread = thread;
 
         ReentrantLock lock = new ReentrantLock();
+        lock.unlock();
          Thread aa= new Thread(new Runnable() {
             @Override
             public void run() {
